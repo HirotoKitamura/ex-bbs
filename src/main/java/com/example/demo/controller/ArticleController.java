@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.domain.Article;
 import com.example.demo.form.ArticleForm;
 import com.example.demo.repository.ArticleRepository;
+import com.example.demo.repository.CommentRepository;
 
 /**
  * 記事のコントローラークラス.
@@ -26,6 +27,9 @@ public class ArticleController {
 	@Autowired
 	private ArticleRepository articleRepository;
 
+	@Autowired
+	private CommentRepository commentRepository;
+
 	/**
 	 * 記事一覧を表示.
 	 * 
@@ -37,6 +41,9 @@ public class ArticleController {
 		List<Article> articleList = articleRepository.findAll();
 		if (articleList.size() == 0) {
 			model.addAttribute("noArticle", "記事がありません　投稿してね");
+		}
+		for (Article article : articleList) {
+			article.setCommentList(commentRepository.findByArticleId(article.getId()));
 		}
 		model.addAttribute("articleList", articleList);
 		return "bbs";

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/css/xxx.css">
+<link rel="stylesheet" href="/css/bbs.css" th:href="@{/css/bbs.css}">
 </head>
 <body>
 	<h1 style="color: red;">掲示板！</h1>
@@ -16,10 +16,18 @@
 		<div th:text="${noArticle}" style="color: red;"></div>
 		<div th:each="article:${articleList}">
 			投稿者名:<span th:text="${article.name}"></span><br>
-			投稿内容:<br>
-			<div
+			投稿内容:<br><br>
+			<div class="content"
 				th:each="str, stat : ${article.content.split('\r\n|\r|\n', -1)}" th:text="${str}">
 				<br>
+			</div><br>
+			<div th:each="comment:${article.commentList}">
+				コメント者名:<span th:text="${comment.name}"></span><br>
+				コメント内容:<br><br>
+				<div class="content"
+					th:each="str, stat : ${comment.content.split('\r\n|\r|\n', -1)}" th:text="${str}">
+					<br>
+				</div><br>
 			</div>
 			<hr>
 		</div>
