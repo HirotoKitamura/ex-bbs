@@ -22,6 +22,10 @@
 			th:each="str, stat : ${article.content.split('\r\n|\r|\n', -1)}" th:text="${str}">
 			<br>
 		</div><br>
+		<form th:action="@{/deleteArticle}" method="post">
+			<input type="hidden" name="id" th:value="${article.id}">
+			<button>記事削除</button>
+		</form><br>
 		<div th:each="comment:${article.commentList}" class="comment">
 			コメント者名:<span th:text="${comment.name}"></span><br>
 			コメント内容:<br>

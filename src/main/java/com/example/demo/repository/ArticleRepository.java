@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
@@ -49,6 +50,17 @@ public class ArticleRepository {
 	public void insert(Article article) {
 		String sql = "INSERT INTO articles (name,content) VALUES (:name,:content);";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(article);
+		template.update(sql, param);
+	}
+
+	/**
+	 * IDから記事をコメントごと削除.
+	 * 
+	 * @param id 削除する記事のID
+	 */
+	public void deleteById(Integer id) {
+		String sql = "DELETE FROM articles WHERE id=:id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		template.update(sql, param);
 	}
 }

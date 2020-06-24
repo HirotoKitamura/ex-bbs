@@ -80,4 +80,16 @@ public class ArticleController {
 		commentRepository.insert(comment);
 		return "redirect:/";
 	}
+
+	/**
+	 * 記事を削除.
+	 * 
+	 * @param id 記事のID hiddenで自動取得
+	 * @return 記事一覧にリダイレクト
+	 */
+	@RequestMapping("deleteArticle")
+	public String deleteArticle(String id) {
+		articleRepository.deleteById(Integer.parseInt(id));
+		return "redirect:/";
+	}
 }
