@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.Article;
+import com.example.demo.domain.ArticleAndComment;
 
 /**
  * 記事のリポジトリクラス.
@@ -27,7 +28,9 @@ public class ArticleRepository {
 	/**
 	 * 記事のRowMapper.
 	 */
-	private final static RowMapper<Article> ARTICLE_ROWPAPPER = new BeanPropertyRowMapper<Article>(Article.class);
+//	private final static RowMapper<Article> ARTICLE_ROWPAPPER = new BeanPropertyRowMapper<Article>(Article.class);
+	private final static RowMapper<ArticleAndComment> ARTICLE_AND_COMMENT_ROWMAPPER = new BeanPropertyRowMapper<>(
+			ArticleAndComment.class);
 //			(rs, i) -> {
 //		return new Article(rs.getInt("id"), rs.getString("name"), rs.getString("content"));
 //	};
@@ -37,9 +40,24 @@ public class ArticleRepository {
 	 * 
 	 * @return 記事のリスト
 	 */
-	public List<Article> findAll() {
-		String sql = "SELECT id,name,content FROM articles ORDER BY id DESC;";
-		return template.query(sql, ARTICLE_ROWPAPPER);
+//	public List<Article> findAll() {
+//		String sql = "SELECT id,name,content FROM articles ORDER BY id DESC;";
+//		return template.query(sql, ARTICLE_ROWPAPPER);
+//	}
+
+	/**
+	 * 記事とコメントを記事ID(投稿日時の昇順に附番)の降順、次いでコメントIDの降順で全件検索.
+	 * 
+	 * OUTER JOINでコメントがない記事も検索できる
+	 * 
+	 * @return 記事とコメントのリスト
+	 */
+	public List<ArticleAndComment> findAll() {
+		String sql = "SELECT a.id article_id, a.name article_contributor_name"
+				+ ", a.content article_content, c.id comment_id, c.name comment_contributor_name"
+				+ ", c.content comment_content FROM articles a LEFT JOIN comments c"
+				+ " ON a.id = c.article_id ORDER BY a.id DESC, c.id DESC;";
+		return template.query(sql, ARTICLE_AND_COMMENT_ROWMAPPER);
 	}
 
 	/**
