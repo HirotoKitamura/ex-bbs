@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,9 +24,10 @@ public class ArticleRepository {
 	/**
 	 * 記事のRowMapper.
 	 */
-	private final static RowMapper<Article> ARTICLE_ROWPAPPER = (rs, i) -> {
-		return new Article(rs.getInt("id"), rs.getString("name"), rs.getString("content"));
-	};
+	private final static RowMapper<Article> ARTICLE_ROWPAPPER = new BeanPropertyRowMapper<Article>(Article.class);
+//			(rs, i) -> {
+//		return new Article(rs.getInt("id"), rs.getString("name"), rs.getString("content"));
+//	};
 
 	/**
 	 * 記事を記事ID(投稿日時の昇順に附番)の降順で全件検索.
