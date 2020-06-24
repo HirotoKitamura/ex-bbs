@@ -61,7 +61,6 @@ public class ArticleController {
 	public String insertArticle(ArticleForm articleForm) {
 		Article article = new Article();
 		BeanUtils.copyProperties(articleForm, article);
-		article.setContent(articleForm.getContent());
 		articleRepository.insert(article);
 		return "redirect:/";
 	}
@@ -76,7 +75,7 @@ public class ArticleController {
 	public String insertComment(CommentForm commentForm) {
 		Comment comment = new Comment();
 		BeanUtils.copyProperties(commentForm, comment);
-		comment.setContent(commentForm.getContent());
+//		comment.setContent(commentForm.getContent());
 		commentRepository.insert(comment);
 		return "redirect:/";
 	}
@@ -84,12 +83,12 @@ public class ArticleController {
 	/**
 	 * 記事を削除.
 	 * 
-	 * @param id 記事のID hiddenで自動取得
+	 * @param articleId 記事のID hiddenで自動取得
 	 * @return 記事一覧にリダイレクト
 	 */
 	@RequestMapping("deleteArticle")
-	public String deleteArticle(String id) {
-		articleRepository.deleteById(Integer.parseInt(id));
+	public String deleteArticle(String articleId) {
+		articleRepository.deleteById(Integer.parseInt(articleId));
 		return "redirect:/";
 	}
 }
