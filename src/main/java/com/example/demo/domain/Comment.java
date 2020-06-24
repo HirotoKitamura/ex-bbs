@@ -1,14 +1,12 @@
 package com.example.demo.domain;
 
-import java.util.List;
-
 /**
- * 記事のドメインクラス.
+ * コメントのドメインクラス.
  * 
  * @author hiroto.kitamura
  *
  */
-public class Article {
+public class Comment {
 	/**
 	 * データベース上のID.
 	 */
@@ -22,20 +20,20 @@ public class Article {
 	 */
 	private String content;
 	/**
-	 * 記事についたコメントのリスト.
+	 * このコメントがついている記事のID.
 	 */
-	private List<Comment> commentList;
+	private Integer articleId;
 
-	public Article() {
+	public Comment() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Article(Integer id, String name, String content, List<Comment> commentList) {
+	public Comment(Integer id, String name, String content, Integer articleId) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.content = content;
-		this.commentList = commentList;
+		this.articleId = articleId;
 	}
 
 	public Integer getId() {
@@ -62,17 +60,17 @@ public class Article {
 		this.content = content;
 	}
 
-	public List<Comment> getCommentList() {
-		return commentList;
+	public Integer getArticleId() {
+		return articleId;
 	}
 
-	public void setCommentList(List<Comment> commentList) {
-		this.commentList = commentList;
+	public void setArticleId(Integer articleId) {
+		this.articleId = articleId;
 	}
 
 	@Override
 	public String toString() {
-		return "Article [id=" + id + ", name=" + name + ", content=" + content + ", commentList=" + commentList + "]";
+		return "Comment [id=" + id + ", name=" + name + ", content=" + content + ", articleId=" + articleId + "]";
 	}
 
 }
