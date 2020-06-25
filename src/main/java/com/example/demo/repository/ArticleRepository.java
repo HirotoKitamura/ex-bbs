@@ -50,7 +50,7 @@ public class ArticleRepository {
 						commentContent, articleId);
 //				articleList.get(articleList.size() - 1).getCommentList().add(comment);
 				commentList.add(comment);
-				article.setCommentList(commentList);
+//				article.setCommentList(commentList);
 			}
 		}
 		return articleList;
@@ -81,7 +81,11 @@ public class ArticleRepository {
 	public void insert(Article article) {
 		String sql = "SELECT max(id) FROM articles;";
 		Integer maxId = template.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
-		article.setId(maxId + 1);
+		if (maxId == null) {
+			article.setId(1);
+		} else {
+			article.setId(maxId + 1);
+		}
 		sql = "INSERT INTO articles (id,name,content) VALUES (:id,:name,:content);";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(article);
 		template.update(sql, param);
@@ -106,8 +110,9 @@ public class ArticleRepository {
 	public void updateId(Integer id) {
 		String sql = "SELECT max(id) FROM articles;";
 		Integer maxId = template.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
-		sql = "UPDATE articles SET id=:maxId+1 WHERE id=:id;";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id).addValue("maxId", maxId);
+		sql = "UPDATE articles SET id=:newId WHERE id=:id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id).addValue("newId",
+				id == maxId ? id : maxId + 1);
 		template.update(sql, param);
 	}
 }
