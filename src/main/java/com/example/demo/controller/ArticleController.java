@@ -100,6 +100,7 @@ public class ArticleController {
 		BeanUtils.copyProperties(commentForm, comment);
 //		comment.setContent(commentForm.getContent());
 		commentRepository.insert(comment);
+		articleRepository.updateId(comment.getArticleId());
 		return "redirect:/";
 	}
 

@@ -94,4 +94,17 @@ public class ArticleRepository {
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		template.update(sql, param);
 	}
+
+	/**
+	 * 指定された記事のIDを、最も大きいID+1に更新する.
+	 * 
+	 * @param id IDを更新する記事
+	 */
+	public void updateId(Integer id) {
+		String sql = "SELECT max(id) FROM articles;";
+		Integer maxId = template.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
+		sql = "UPDATE articles SET id=:maxId+1 WHERE id=:id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id).addValue("maxId", maxId);
+		template.update(sql, param);
+	}
 }
