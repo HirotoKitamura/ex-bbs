@@ -114,4 +114,16 @@ public class ArticleController {
 		articleRepository.deleteById(Integer.parseInt(articleId));
 		return "redirect:/";
 	}
+
+	/**
+	 * コメントを削除.
+	 * 
+	 * @param commentId コメントのID hiddenで自動取得
+	 * @return 記事一覧にリダイレクト
+	 */
+	@RequestMapping("deleteComment")
+	public String deleteComment(String commentId) {
+		commentRepository.deleteById(Integer.parseInt(commentId));
+		return "redirect:/";
+	}
 }

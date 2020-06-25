@@ -32,7 +32,12 @@
 			<div class="content"
 				th:each="str: ${comment.content.split('\r\n|\r|\n', -1)}" th:text="${str}">
 				<br>
-			</div><br>
+			</div>
+			<form th:action="@{/deleteComment}" method="post">
+				<input type="hidden" name="commentId" th:value="${comment.id}">
+				<button>コメント削除</button>
+			</form>
+			<br>
 		</div>
 		<form th:action="@{/insertComment}" method="post" th:object="${commentForm}">
 			<input type="hidden" name="articleId" th:value="${article.id}">
