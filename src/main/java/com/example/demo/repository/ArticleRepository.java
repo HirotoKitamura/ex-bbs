@@ -79,7 +79,10 @@ public class ArticleRepository {
 	 * @param article 挿入する記事
 	 */
 	public void insert(Article article) {
-		String sql = "INSERT INTO articles (name,content) VALUES (:name,:content);";
+		String sql = "SELECT max(id) FROM articles;";
+		Integer maxId = template.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
+		article.setId(maxId + 1);
+		sql = "INSERT INTO articles (id,name,content) VALUES (:id,:name,:content);";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(article);
 		template.update(sql, param);
 	}
