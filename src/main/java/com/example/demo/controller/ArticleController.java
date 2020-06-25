@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class ArticleController {
 
 	@Autowired
 	private CommentRepository commentRepository;
+
+	@Autowired
+	private HttpSession session;
 
 	@ModelAttribute
 	private ArticleForm setUpArticleForm() {
@@ -69,6 +74,7 @@ public class ArticleController {
 	 */
 	@RequestMapping("insertArticle")
 	public String insertArticle(@Validated ArticleForm articleForm, BindingResult result, Model model) {
+		session.setAttribute("name", articleForm.getName());
 		if (result.hasErrors()) {
 			return index(model);
 		}
@@ -86,6 +92,7 @@ public class ArticleController {
 	 */
 	@RequestMapping("insertComment")
 	public String insertComment(@Validated CommentForm commentForm, BindingResult result, Model model) {
+		session.setAttribute("name", commentForm.getName());
 		if (result.hasErrors()) {
 			return index(model);
 		}

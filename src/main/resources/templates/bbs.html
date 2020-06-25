@@ -8,7 +8,7 @@
 <body>
 	<h1 style="color: red;">掲示板！</h1>
 	<form th:action="@{/insertArticle}" method="post" th:object="${articleForm}">
-		投稿者名:<input type="text" name="name" th:field="*{name}"><span th:errors="*{name}" style="color: red;"></span><br>
+		投稿者名:<input type="text" name="name" th:value="${session.name}"><span th:errors="*{name}" style="color: red;"></span><br>
 		投稿内容:<textarea rows="5" cols="30" name="content" th:field="*{content}"></textarea><span th:errors="*{content}" style="color: red;"></span>
 		<br>
 		<button>記事投稿</button>
@@ -37,7 +37,7 @@
 		<form th:action="@{/insertComment}" method="post" th:object="${commentForm}">
 			<input type="hidden" name="articleId" th:value="${article.id}">
 			名前:<span th:if="${article.id==commentForm.articleId}" th:errors="*{name}" style="color: red;"></span><br>
-			<input type="text" name="name" th:field="*{name}"><br>
+			<input type="text" name="name" th:value="${session.name}"><br>
 			コメント:<span th:if="${article.id==commentForm.articleId}" th:errors="*{content}" style="color: red;"></span><br>
 			<textarea rows="5" cols="30" name="content" th:text="${article.id==commentForm.articleId}?${commentForm.content}:''"></textarea><br>
 			<button>コメント投稿</button>
