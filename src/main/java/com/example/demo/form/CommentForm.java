@@ -25,6 +25,10 @@ public class CommentForm {
 	 * このコメントをつける記事のID(hiddenで自動取得).
 	 */
 	private Integer articleId;
+	/**
+	 * 
+	 */
+	private String isSage;
 
 	public String getName() {
 		return name;
@@ -48,6 +52,18 @@ public class CommentForm {
 
 	public void setArticleId(Integer articleId) {
 		this.articleId = articleId;
+	}
+
+	public Boolean IsSage() {
+		if ("true".equals(isSage)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void setIsSage(String isSage) {
+		this.isSage = isSage;
 	}
 
 	@Override
