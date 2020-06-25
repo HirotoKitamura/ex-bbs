@@ -33,17 +33,24 @@ public class ArticleRepository {
 	private final static ResultSetExtractor<List<Article>> ARTICLE_RESULTSET = (rs) -> {
 		List<Article> articleList = new ArrayList<>();
 		Integer prevArticleId = null;
+		List<Comment> commentList = null;
+		Article article = null;
 		while (rs.next()) {
 			Integer articleId = rs.getInt("article_id");
-			if (articleList.size() == 0 || articleId != prevArticleId) {
-				articleList.add(new Article(articleId, rs.getString("article_contributor_name"),
-						rs.getString("article_content"), new ArrayList<Comment>()));
+			if (articleId != prevArticleId) {
+				commentList = new ArrayList<>();
+				article = new Article(articleId, rs.getString("article_contributor_name"),
+						rs.getString("article_content"), commentList);
+				articleList.add(article);
 				prevArticleId = articleId;
 			}
 			String commentContent = rs.getString("comment_content");
 			if (commentContent != null) {
-				articleList.get(articleList.size() - 1).getCommentList().add(new Comment(rs.getInt("comment_id"),
-						rs.getString("comment_contributor_name"), commentContent, articleId));
+				Comment comment = new Comment(rs.getInt("comment_id"), rs.getString("comment_contributor_name"),
+						commentContent, articleId);
+//				articleList.get(articleList.size() - 1).getCommentList().add(comment);
+				commentList.add(comment);
+				article.setCommentList(commentList);
 			}
 		}
 		return articleList;
