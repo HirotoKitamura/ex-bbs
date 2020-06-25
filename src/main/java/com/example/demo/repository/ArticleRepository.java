@@ -1,10 +1,10 @@
 package com.example.demo.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.Article;
-import com.example.demo.domain.ArticleAndComment;
+import com.example.demo.domain.Comment;
 
 /**
  * 記事のリポジトリクラス.
@@ -26,38 +26,44 @@ public class ArticleRepository {
 	private NamedParameterJdbcTemplate template;
 
 	/**
-	 * 記事のRowMapper.
-	 */
-//	private final static RowMapper<Article> ARTICLE_ROWPAPPER = new BeanPropertyRowMapper<Article>(Article.class);
-	private final static RowMapper<ArticleAndComment> ARTICLE_AND_COMMENT_ROWMAPPER = new BeanPropertyRowMapper<>(
-			ArticleAndComment.class);
-//			(rs, i) -> {
-//		return new Article(rs.getInt("id"), rs.getString("name"), rs.getString("content"));
-//	};
-
-	/**
-	 * 記事を記事ID(投稿日時の昇順に附番)の降順で全件検索.
+	 * 記事のResultSet.
 	 * 
-	 * @return 記事のリスト
+	 * JOINで結合されたテーブルから記事とそれに付随するコメントリストを取り出す
 	 */
-//	public List<Article> findAll() {
-//		String sql = "SELECT id,name,content FROM articles ORDER BY id DESC;";
-//		return template.query(sql, ARTICLE_ROWPAPPER);
-//	}
+	private final static ResultSetExtractor<List<Article>> ARTICLE_RESULTSET = (rs) -> {
+		List<Article> articleList = new ArrayList<>();
+		Integer prevArticleId = null;
+		while (rs.next()) {
+			Integer articleId = rs.getInt("article_id");
+			if (articleList.size() == 0 || articleId != prevArticleId) {
+				articleList.add(new Article(articleId, rs.getString("article_contributor_name"),
+						rs.getString("article_content"), new ArrayList<Comment>()));
+				prevArticleId = articleId;
+			}
+			String commentContent = rs.getString("comment_content");
+			if (commentContent != null) {
+				articleList.get(articleList.size() - 1).getCommentList().add(new Comment(rs.getInt("comment_id"),
+						rs.getString("comment_contributor_name"), commentContent, articleId));
+			}
+		}
+		return articleList;
+	};
 
 	/**
 	 * 記事とコメントを記事ID(投稿日時の昇順に附番)の降順、次いでコメントIDの降順で全件検索.
 	 * 
 	 * OUTER JOINでコメントがない記事も検索できる
 	 * 
-	 * @return 記事とコメントのリスト
+	 * @return 記事のリスト
 	 */
-	public List<ArticleAndComment> findAll() {
+	public List<Article> findAll() {
 		String sql = "SELECT a.id article_id, a.name article_contributor_name"
 				+ ", a.content article_content, c.id comment_id, c.name comment_contributor_name"
 				+ ", c.content comment_content FROM articles a LEFT JOIN comments c"
 				+ " ON a.id = c.article_id ORDER BY a.id DESC, c.id DESC;";
-		return template.query(sql, ARTICLE_AND_COMMENT_ROWMAPPER);
+		List<Article> articleList = template.query(sql, ARTICLE_RESULTSET);
+//		return template.query(sql, ARTICLE_AND_COMMENT_ROWMAPPER);
+		return articleList;
 	}
 
 	/**
