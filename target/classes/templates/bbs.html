@@ -39,7 +39,7 @@
 			名前:<span th:if="${article.id==commentForm.articleId}" th:errors="*{name}" style="color: red;"></span><br>
 			<input type="text" name="name" th:field="*{name}"><br>
 			コメント:<span th:if="${article.id==commentForm.articleId}" th:errors="*{content}" style="color: red;"></span><br>
-			<textarea rows="5" cols="30" name="content" th:field="*{content}"></textarea><br>
+			<textarea rows="5" cols="30" name="content" th:text="${article.id==commentForm.articleId}?${commentForm.content}:''"></textarea><br>
 			<button>コメント投稿</button>
 		</form>
 		<hr>
