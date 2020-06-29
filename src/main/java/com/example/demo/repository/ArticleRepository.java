@@ -40,7 +40,7 @@ public class ArticleRepository {
 			if (articleId != prevArticleId) {
 				commentList = new ArrayList<>();
 				article = new Article(articleId, rs.getString("article_contributor_name"),
-						rs.getString("article_content"), commentList);
+						rs.getString("article_content"), rs.getInt("fav"), commentList);
 				articleList.add(article);
 				prevArticleId = articleId;
 			}
@@ -65,7 +65,7 @@ public class ArticleRepository {
 	 */
 	public List<Article> findAll() {
 		String sql = "SELECT a.id article_id, a.name article_contributor_name"
-				+ ", a.content article_content, c.id comment_id, c.name comment_contributor_name"
+				+ ", a.content article_content, a.fav, c.id comment_id, c.name comment_contributor_name"
 				+ ", c.content comment_content FROM articles a LEFT JOIN comments c"
 				+ " ON a.id = c.article_id ORDER BY a.id DESC, c.id DESC;";
 		List<Article> articleList = template.query(sql, ARTICLE_RESULTSET);
@@ -86,7 +86,7 @@ public class ArticleRepository {
 		} else {
 			article.setId(maxId + 1);
 		}
-		sql = "INSERT INTO articles (id,name,content) VALUES (:id,:name,:content);";
+		sql = "INSERT INTO articles (id,name,content,fav) VALUES (:id,:name,:content,0);";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(article);
 		template.update(sql, param);
 	}
@@ -114,5 +114,28 @@ public class ArticleRepository {
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id).addValue("newId",
 				id == maxId ? id : maxId + 1);
 		template.update(sql, param);
+	}
+
+	/**
+	 * 指定された記事のいいねを1増やす.
+	 * 
+	 * @param id 記事のID
+	 */
+	public void addFav(Integer id) {
+		String sql = "UPDATE articles SET fav=fav+1 WHERE id=:id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		template.update(sql, param);
+	}
+
+	/**
+	 * 指定された記事のいいねの数を返す.
+	 * 
+	 * @param id 記事のID
+	 * @return いいねの数
+	 */
+	public Integer loadFav(Integer id) {
+		String sql = "SELECT fav FROM articles WHERE id=:id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		return template.queryForObject(sql, param, Integer.class);
 	}
 }

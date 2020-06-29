@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>木下組掲示板</title>
 <link rel="stylesheet" href="/css/bbs.css" th:href="@{/css/bbs.css}">
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
 	<h1 style="color: red;">掲示板！</h1>
@@ -25,6 +26,8 @@
 		<form th:action="@{/deleteArticle}" method="post">
 			<input type="hidden" name="articleId" th:value="${article.id}">
 			<button>記事削除</button>
+			<button type="button" class="fav" th:value="${article.id}">いいね!</button>
+			<span th:text="${article.fav}" th:id="'favNum'+${article.id}"></span>
 		</form><br>
 		<div th:each="comment:${article.commentList}" class="comment">
 			コメント者名:<span th:text="${comment.name}"></span><br>
@@ -50,5 +53,6 @@
 		</form>
 		<hr>
 	</div>
+	<script th:src="@{/js/bbs.js}"></script>
 </body>
 </html>

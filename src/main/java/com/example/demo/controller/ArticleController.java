@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.domain.Article;
 import com.example.demo.domain.Comment;
@@ -128,5 +132,20 @@ public class ArticleController {
 	public String deleteComment(String commentId) {
 		commentRepository.deleteById(Integer.parseInt(commentId));
 		return "redirect:/";
+	}
+
+	/**
+	 * いいねを付ける.
+	 * 
+	 * @param id いいねをつける記事ID
+	 * @return 表示するいいねの数が入ったマップ
+	 */
+	@ResponseBody
+	@RequestMapping(value = "addFav", method = RequestMethod.POST)
+	public Map<String, Integer> addFav(String id) {
+		Map<String, Integer> map = new HashMap<>();
+		articleRepository.addFav(Integer.parseInt(id));
+		map.put("fav", articleRepository.loadFav(Integer.parseInt(id)));
+		return map;
 	}
 }

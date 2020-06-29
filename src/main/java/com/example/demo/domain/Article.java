@@ -22,6 +22,10 @@ public class Article {
 	 */
 	private String content;
 	/**
+	 * 記事についたいいねの数.
+	 */
+	private Integer fav;
+	/**
 	 * 記事についたコメントのリスト.
 	 */
 	private List<Comment> commentList;
@@ -30,11 +34,12 @@ public class Article {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Article(Integer id, String name, String content, List<Comment> commentList) {
+	public Article(Integer id, String name, String content, Integer fav, List<Comment> commentList) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.content = content;
+		this.fav = fav;
 		this.commentList = commentList;
 	}
 
@@ -70,9 +75,18 @@ public class Article {
 		this.commentList = commentList;
 	}
 
+	public Integer getFav() {
+		return fav;
+	}
+
+	public void setFav(Integer fav) {
+		this.fav = fav;
+	}
+
 	@Override
 	public String toString() {
-		return "Article [id=" + id + ", name=" + name + ", content=" + content + ", commentList=" + commentList + "]";
+		return "Article [id=" + id + ", name=" + name + ", content=" + content + ", fav=" + fav + ", commentList="
+				+ commentList + "]";
 	}
 
 }
