@@ -67,7 +67,7 @@ public class ArticleRepository {
 		String sql = "SELECT a.id article_id, a.name article_contributor_name"
 				+ ", a.content article_content, a.fav, c.id comment_id, c.name comment_contributor_name"
 				+ ", c.content comment_content FROM articles a LEFT JOIN comments c"
-				+ " ON a.id = c.article_id ORDER BY a.id DESC, c.id DESC;";
+				+ " ON a.id = c.article_id ORDER BY a.id DESC, c.id;";
 		List<Article> articleList = template.query(sql, ARTICLE_RESULTSET);
 //		return template.query(sql, ARTICLE_AND_COMMENT_ROWMAPPER);
 		return articleList;
