@@ -142,7 +142,7 @@ public class ArticleController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "addFav", method = RequestMethod.POST)
-	public Map<String, Integer> addFav(String id) {
+	synchronized public Map<String, Integer> addFav(String id) {
 		Map<String, Integer> map = new HashMap<>();
 		articleRepository.addFav(Integer.parseInt(id));
 		map.put("fav", articleRepository.loadFav(Integer.parseInt(id)));
