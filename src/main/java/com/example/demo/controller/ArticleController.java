@@ -148,4 +148,16 @@ public class ArticleController {
 		map.put("fav", articleRepository.loadFav(Integer.parseInt(id)));
 		return map;
 	}
+
+	/**
+	 * エラーテスト用.
+	 * 
+	 * @return 遷移することはない
+	 */
+	@RequestMapping("500")
+	public String _500() {
+		int i = 10 / 0;
+		System.out.println(i);
+		return "redirect:/";
+	}
 }
